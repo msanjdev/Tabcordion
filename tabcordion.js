@@ -17,7 +17,7 @@
  * @see https://github.com/janl/mustache.js/
  * @see http://getbootstrap.com/javascript/#collapse
  * @see https://github.com/simonwade/tabcordion (inspiration)
- * @author Ronan <ronan@lespolypodes.com>
+ * @author Ronan <ronan@lespolypodes.com>, Gaëtan <gaetan@lespolypodes.com>
  * @example
  *   // Call mustacheJs script
  *   // then insert a <div id="myTab"></div>
@@ -57,6 +57,7 @@
             panelTitleTag: 'h4'
         },
         accordion: {
+            elementId: 'accordion'
         },
         scheduler: null
     };
@@ -100,7 +101,7 @@
             var templates = {};
 
             // heading tpl expects "target" (such as '#foo') & "title"
-            templates.heading = '<div class="panel-heading"><' + this.options.tabs.panelTitleTag + ' class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="{{ target }}_accordion">{{{ title }}}</a></'+ this.options.tabs.panelTitleTag + '></div>';
+            templates.heading = '<div class="panel-heading"><' + this.options.tabs.panelTitleTag + ' class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#' + this.options.accordion.elementId + '" href="{{ target }}_accordion">{{{ title }}}</a></'+ this.options.tabs.panelTitleTag + '></div>';
 
             // content tpl expects "id" (such as '#foo') & "content"
             templates.content = '<div id="{{ id }}_accordion" class="panel-collapse collapse"><div class="panel-body">{{{ content }}}</div></div>';
@@ -111,6 +112,7 @@
             templates.containerEnd = '</div>';
 
             return templates;
+
         };
 
         /**
@@ -123,8 +125,11 @@
          */
         Tabcordion.prototype.collapse2tab = function()
         {
-            $('#accordion').hide();
-            $('.nav-tabs, .tab-content', this.$el).show();
+            // Duplicate DOM is bad. It is known.
+            this.$el.find(' > #' + this.options.accordion.elementId).remove();
+
+            this.$el.find(' > .nav-tabs').show();
+            this.$el.find(' > .tab-content').show();
         };
 
         /**
@@ -136,7 +141,8 @@
         Tabcordion.prototype.tab2collapse = function()
         {
             //  Hiding tabs, then build or just re-showing the collapsible accordion
-            $('.nav-tabs, .tab-content', this.$el).hide();
+            this.$el.find(' > .nav-tabs').hide();
+            this.$el.find(' > .tab-content').hide();
 
             if(0 === this.$el.find('#accordion').length){
 
@@ -176,9 +182,11 @@
                     output += templates.containerItemEnd;
                 }
                 output += templates.containerEnd;
-                this.$el.append(output);
+                // Stupid trick to mislead jQuery selectors overs duplicated IDs
+                this.$el.prepend(output);
             } else {
-                $('#accordion', this.$el).show();
+                // Revealing headers only (collapsed)
+               this.$el.find(' >.panel-group .panel .panel-heading').show();
             }
         }
 
