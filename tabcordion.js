@@ -98,21 +98,80 @@
          */
         Tabcordion.prototype.getTemplates = function() {
 
-            var templates = {};
+            var entityMap = {
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': '&quot;',
+                    "'": '&#39;',
+                    "/": '&#x2F;'
+                };
+
+            function escapeHtml(string) {
+                return String(string).replace(/[&<>"'\/]/g, function (s) {
+                  return entityMap[s];
+                });
+            }
+
+            var _tmpl = {};
 
             // heading tpl expects "target" (such as '#foo') & "title"
-            templates.heading = '<div class="panel-heading"><' + this.options.tabs.panelTitleTag + ' class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#' + this.options.accordion.elementId + '" href="{{ target }}_accordion">{{{ title }}}</a></'+ this.options.tabs.panelTitleTag + '></div>';
+            _tmpl.heading = '<div class="panel-heading"><' + _this.options.tabs.panelTitleTag
+                + ' class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#'
+                + _this.options.accordion.elementId + '" '
+                + 'href="{{ target }}_accordion">'
+                + head.title + '</a></'+ _this.options.tabs.panelTitleTag
+                + '></div>';
 
             // content tpl expects "id" (such as '#foo') & "content"
-            templates.content = '<div id="{{ id }}_accordion" class="panel-collapse collapse"><div class="panel-body">{{{ content }}}</div></div>';
+            _tmpl.content = '<div id="{{ id }}_accordion" '
+            + ' class="panel-collapse collapse"><div class="panel-body">{{{ content }}}</div></div>';
 
-            templates.containerStart = '<div class="panel-group" id="accordion">';
-            templates.containerItemStart = '<div class="panel panel-default">';
-            templates.containerItemEnd = '</div>';
-            templates.containerEnd = '</div>';
+            _tmpl.containerStart = '<div class="panel-group" id="accordion">';
+            _tmpl.containerItemStart = '<div class="panel panel-default">';
+            _tmpl.containerItemEnd = '</div>';
+            _tmpl.containerEnd = '</div>';
+
+            var templates = {};
+            var tmplData = {};
+
+            var fnMatch = function(matched){
+              return mapObj[matched];
+            };
+
+
+            // heading tpl expects "target" (such as '#foo') & "title"
+            templates.heading = function(head) {
+                tmplData = {
+                    '{{ target }}':head.target,
+                    '{{ title }}':head.title
+                };
+
+                return _tmpl.heading.replace(/{{ target }}|{{ title }}/gi, fnMatch);
+            }
+
+            // content tpl expects "id" (such as '#foo') & "content"
+            templates.content = function(body) {
+                tmplData = {
+                    '{{ id }}': body.id,
+                    '{{{ content }}}': body.content
+                };
+                return _tmpl.content.replace(/{{ id }}|{{{ content }}}/gi, ;
+
+            templates.containerStart = function() {
+                return _tmpl.containerItemStart;
+            }
+            templates.containerItemStart() = function() {
+                return _tmpl.containerItemStart;
+            }
+            templates.containerItemEnd = function() {
+                return _tmpl.containerItemEnd;
+            }
+            templates.containerEnd = function() {
+                return _tmpl.containerEnd;
+            }
 
             return templates;
-
         };
 
         /**
@@ -167,21 +226,21 @@
 
                     head.target = $(data.titles[i]).attr('href');
                     head.title = $(data.titles[i]).html();
-                    html.heads[i] = Mustache.render(templates.heading, head);
+                    html.heads[i] = templates.heading(head));
 
                     body.id = $(data.contents[i]).attr('id');
                     body.content = $(data.contents[i]).html();
-                    html.bodies[i] = Mustache.render(templates.content, body);
+                    html.bodies[i] = templates.content(body));
                 }
 
-                output += templates.containerStart;
+                output += templates.containerStart();
                 for(var i=0;i<data.titles.length;i++){
-                    output += templates.containerItemStart;
+                    output += templates.containerItemStart();
                     output += html.heads[i];
                     output += html.bodies[i];
-                    output += templates.containerItemEnd;
+                    output += templates.containerItemEnd();
                 }
-                output += templates.containerEnd;
+                output += templates.containerEnd();
                 // Stupid trick to mislead jQuery selectors overs duplicated IDs
                 this.$el.prepend(output);
             } else {
