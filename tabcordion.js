@@ -98,6 +98,7 @@
          */
         Tabcordion.prototype.getTemplates = function() {
 
+            /* In case HTML escaping is required
             var entityMap = {
                     "&": "&amp;",
                     "<": "&lt;",
@@ -111,16 +112,17 @@
                 return String(string).replace(/[&<>"'\/]/g, function (s) {
                   return entityMap[s];
                 });
-            }
+            } */
 
+            var _this = this;
             var _tmpl = {};
 
             // heading tpl expects "target" (such as '#foo') & "title"
             _tmpl.heading = '<div class="panel-heading"><' + _this.options.tabs.panelTitleTag
                 + ' class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#'
                 + _this.options.accordion.elementId + '" '
-                + 'href="{{ target }}_accordion">'
-                + head.title + '</a></'+ _this.options.tabs.panelTitleTag
+                + 'href="{{ target }}_accordion"> '
+                + '{{ title }}</a></'+ _this.options.tabs.panelTitleTag
                 + '></div>';
 
             // content tpl expects "id" (such as '#foo') & "content"
@@ -134,9 +136,10 @@
 
             var templates = {};
             var tmplData = {};
+            var tmplData = {};
 
             var fnMatch = function(matched){
-              return mapObj[matched];
+              return tmplData[matched];
             };
 
 
@@ -156,20 +159,21 @@
                     '{{ id }}': body.id,
                     '{{{ content }}}': body.content
                 };
-                return _tmpl.content.replace(/{{ id }}|{{{ content }}}/gi, ;
+                return _tmpl.content.replace(/{{ id }}|{{{ content }}}/gi, fnMatch);
+            };
 
             templates.containerStart = function() {
+                return _tmpl.containerStart;
+            };
+            templates.containerItemStart = function() {
                 return _tmpl.containerItemStart;
-            }
-            templates.containerItemStart() = function() {
-                return _tmpl.containerItemStart;
-            }
+            };
             templates.containerItemEnd = function() {
                 return _tmpl.containerItemEnd;
-            }
+            };
             templates.containerEnd = function() {
                 return _tmpl.containerEnd;
-            }
+            };
 
             return templates;
         };
@@ -226,11 +230,11 @@
 
                     head.target = $(data.titles[i]).attr('href');
                     head.title = $(data.titles[i]).html();
-                    html.heads[i] = templates.heading(head));
+                    html.heads[i] = templates.heading(head);
 
                     body.id = $(data.contents[i]).attr('id');
                     body.content = $(data.contents[i]).html();
-                    html.bodies[i] = templates.content(body));
+                    html.bodies[i] = templates.content(body);
                 }
 
                 output += templates.containerStart();
