@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+        <script src="mustache.js"></script>
+        <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script src="tabcordion.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                // Handler for .ready() called.
+                $('#myTab').tabcordion({ breakWidth: 500 });
+            });
+            
+        
+        </script>
+        <style type="text/css">
+        
+        #myTab {
+            border: 1px solid green;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="myTab">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+              <li class="active"><a href="#home" role="tab" data-toggle="tab">Home</a></li>
+              <li><a href="#profile" role="tab" data-toggle="tab">Profile</a></li>
+              <li><a href="#messages" role="tab" data-toggle="tab">Messages</a></li>
+              <li><a href="#settings" role="tab" data-toggle="tab">Settings</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div class="tab-pane active" id="home">home home home home home home home home</div>
+              <div class="tab-pane" id="profile">profile profile profile profile profile profile profile profile profile profile profile profile profile profile profile profile profile profile profile profile profile </div>
+              <div class="tab-pane" id="messages">messages messages messages messages messages messages messages messages messages messages messages messages messages messages messages messages messages messages messages </div>
+              <div class="tab-pane" id="settings">settings settings settings settings settings settings settings settings settings settings settings settings settings settings settings settings settings settings settings settings settings settings settings settings settings settings settings settings settings settings </div>
+            </div>
+        </div>
+    </body>
+</html>
