@@ -1,13 +1,18 @@
 <html>
     <head>
         <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-        <script src="mustache.js"></script>
         <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
         <script src="tabcordion.js"></script>
         <script type="text/javascript">
             $(function() {
-                // Handler for .ready() called.
+                /**
+                Usage: enclose the navigation nav-tabs and the tab-content within a div,
+                and call tabacordion on this wrapping div.
+                
+                Specify a breaking width at which it interchanges.
+                **/
+                
                 $('#myTab').tabcordion({ breakWidth: 500 });
             });
             
@@ -21,6 +26,7 @@
         </style>
     </head>
     <body>
+        <!-- Wrapping div container  -->
         <div id="myTab">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
